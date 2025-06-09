@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WILL GAME - Top Up Free Fire</title>
+    <!-- Add Midtrans payment gateway -->
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" 
+    data-client-key="SB-Mid-client-YourClientKey"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        
+        .game-selector {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .id-input {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .id-input.active {
+            display: block;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .product {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .product-price {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .buy-button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .buy-button:hover {
+            background-color: #2ecc71;
+        }
+        
+        .payment-methods {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .payment-methods.active {
+            display: block;
+        }
+        
+        .payment-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        
+        .payment-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        
+        .payment-button {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-button:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .payment-button img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+        
+        .payment-button.active {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>WILL GAME</h1>
+            <p>Top Up Game Online Termurah dan Terpercaya</p>
+        </header>
+        
+        <div class="game-selector">
+            <select id="game-select">
+                <option value="">-- Pilih Game --</option>
+                <option value="freefire">FREE FIRE</option>
+            </select>
+        </div>
+        
+        <div class="id-input" id="freefire-input">
+            <input type="text" id="player-id" placeholder="Masukkan ID Free Fire">
+            <input type="text" id="player-zone" placeholder="Masukkan Zona ID (contoh: 1234)">
+        </div>
+        
+        <div class="payment-methods" id="payment-methods">
+            <div class="payment-title">Pilih Metode Pembayaran:</div>
+            <div class="payment-buttons">
+                <div class="payment-button" data-method="qris">
+                    <div>QRIS</div>
+                </div>
+                <div class="payment-button" data-method="gopay">
+                    <div>GOPAY</div>
+                </div>
+                <div class="payment-button" data-method="bank_transfer">
+                    <div>Transfer Bank</div>
+                </div>
+                <div class="payment-button" data-method="credit_card">
+                    <div>Kartu Kredit</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Memproses pembayaran...</p>
+        </div>
+        
+        <div class="products" id="freefire-products">
+            <div class="product">
+                <div class="product-name">💎5 Diamond</div>
+                <div class="product-price">Rp 1.000</div>
+                <button class="buy-button" data-diamond="5" data-price="1000">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎12 Diamond</div>
+                <div class="product-price">Rp 2.500</div>
+                <button class="buy-button" data-diamond="12" data-price="2500">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎50 Diamond</div>
+                <div class="product-price">Rp 7.500</div>
+                <button class="buy-button" data-diamond="50" data-price="7500">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎70 Diamond</div>
+                <div class="product-price">Rp 9.500</div>
+                <button class="buy-button" data-diamond="70" data-price="9500">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎100 Diamond</div>
+                <div class="product-price">Rp 14.500</div>
+                <button class="buy-button" data-diamond="100" data-price="14500">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎140 Diamond</div>
+                <div class="product-price">Rp 20.000</div>
+                <button class="buy-button" data-diamond="140" data-price="20000">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎210 Diamond</div>
+                <div class="product-price">Rp 27.500</div>
+                <button class="buy-button" data-diamond="210" data-price="27500">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎355 Diamond</div>
+                <div class="product-price">Rp 47.000</div>
+                <button class="buy-button" data-diamond="355" data-price="47000">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎500 Diamond</div>
+                <div class="product-price">Rp 69.500</div>
+                <button class="buy-button" data-diamond="500" data-price="69500">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎1000 Diamond</div>
+                <div class="product-price">Rp 136.000</div>
+                <button class="buy-button" data-diamond="1000" data-price="136000">Beli Sekarang</button>
+            </div>
+            
+            <div class="product">
+                <div class="product-name">💎2180 Diamond</div>
+                <div class="product-price">Rp 300.000</div>
+                <button class="buy-button" data-diamond="2180" data-price="300000">Beli Sekarang</button>
+            </div>
+        </div>
+        
+        <div id="successModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Pembayaran Berhasil!</h2>
+                <p>Diamond akan segera diproses ke akun Free Fire Anda.</p>
+                <p>ID: <span id="success-id"></span></p>
+                <p>Jumlah Diamond: <span id="success-diamond"></span></p>
+                <p>Silakan cek dalam 1-5 menit.</p>
+            </div>
+        </div>
+        
+        <footer>
+            &copy; <span id="current-year"></span> WILL GAME - Top Up Game Online Termurah dan Terpercaya
+        </footer>
+    </div>
+    
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        document.getElementById('game-select').addEventListener('change', function() {
+            document.querySelectorAll('.id-input').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.products').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.getElementById('payment-methods').classList.remove('active');
+            
+            if (this.value === 'freefire') {
+                document.getElementById('freefire-input').classList.add('active');
+                document.getElementById('freefire-products').style.display = 'grid';
+                document.getElementById('payment-methods').classList.add('active');
+            }
+        });
+        
+        document.querySelectorAll('.payment-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.payment-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Handle buy button clicks
+        document.querySelectorAll('.buy-button').forEach(button => {
+            button.addEventListener('click', async function() {
+                const product = this.parentElement;
+                const productName = product.querySelector('.product-name').textContent;
+                const productPrice = this.getAttribute('data-price');
+                const diamondAmount = this.getAttribute('data-diamond');
+                const selectedPayment = document.querySelector('.payment-button.active');
+                const playerId = document.getElementById('player-id').value;
+                const zoneId = document.getElementById('player-zone').value;
+                
+                if (!selectedPayment) {
+                    alert('Silakan pilih metode pembayaran terlebih dahulu!');
+                    return;
+                }
+                
+                if (!playerId || !zoneId) {
+                    alert('Silakan masukkan ID dan Zona Free Fire terlebih dahulu!');
+                    return;
+                }
+                
+                // Show loading
+                document.getElementById('loading').style.display = 'block';
+                
+                try {
+                    // In a real implementation, this would call your backend API
+                    // For demo purposes, we'll simulate the API call
+                    const paymentToken = await simulatePaymentApiCall(
+                        playerId, 
+                        zoneId, 
+                        diamondAmount, 
+                        productPrice, 
+                        selectedPayment.dataset.method
+                    );
+                    
+                    // Process payment with Midtrans
+                    snap.pay(paymentToken, {
+                        onSuccess: function(result) {
+                            document.getElementById('loading').style.display = 'none';
+                            document.getElementById('success-id').textContent = playerId;
+                            document.getElementById('success-diamond').textContent = diamondAmount;
+                            document.getElementById('successModal').style.display = 'block';
+                            
+                            // In a real implementation, you would send this to your backend
+                            console.log('Payment success:', result);
+                            // simulateDiamondDelivery(playerId, zoneId, diamondAmount);
+                        },
+                        onPending: function(result) {
+                            document.getElementById('loading').style.display = 'none';
+                            alert('Pembayaran tertunda. Silakan selesaikan pembayaran Anda.');
+                            console.log('Payment pending:', result);
+                        },
+                        onError: function(result) {
+                            document.getElementById('loading').style.display = 'none';
+                            alert('Pembayaran gagal. Silakan coba lagi.');
+                            console.log('Payment error:', result);
+                        },
+                        onClose: function() {
+                            document.getElementById('loading').style.display = 'none';
+                            console.log('Payment popup closed');
+                        }
+                    });
+                } catch (error) {
+                    document.getElementById('loading').style.display = 'none';
+                    alert('Terjadi kesalahan: ' + error.message);
+                    console.error('Error:', error);
+                }
+            });
+        });
+        
+        // Close modal
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('successModal').style.display = 'none';
+        });
+        
+        // Simulate API call to your backend (in real implementation, replace with actual fetch)
+        async function simulatePaymentApiCall(playerId, zoneId, diamondAmount, price, paymentMethod) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // This would come from your backend in a real implementation
+                    const mockToken = 'mock-token-' + Math.random().toString(36).substr(2, 9);
+                    resolve(mockToken);
+                }, 1000);
+            });
+        }
+        
+        // Simulate diamond delivery (in real implementation, this would be a backend process)
+        async function simulateDiamondDelivery(playerId, zoneId, diamondAmount) {
+            console.log(`Mengirim ${diamondAmount} diamond ke ID: ${playerId} Zona: ${zoneId}`);
+            // In a real implementation, this would call Garena's API or your distributor's API
+        }
+          </script>
+</body>
+  </html>
